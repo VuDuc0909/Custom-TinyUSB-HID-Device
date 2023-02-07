@@ -87,7 +87,7 @@
    * This class contains the exact same methods as the Arduino Keyboard.h class.
    */
   
-  class TinyKeyboard_ : public Print
+  class TinyKeyboard_ 
   {
   private:
     KeyReport _keyReport;
