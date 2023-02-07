@@ -1,6 +1,3 @@
-# Custom-TinyUSB-HID-Device
-HID Device control for TinyUSB
-
 # Custom TinyUSB HID Device
 
 This library provides an Arduino Mouse.h and Keyboard.h compatible API for TinyUSB stack mouse, keyboard and consumer control.
