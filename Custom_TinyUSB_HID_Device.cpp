@@ -77,12 +77,12 @@
     while( !USBDevice.mounted() ) delay(1);
   }
 
-  void TinyMouse_::move (int8_t x, int8_t y, int8_t wheel) {
+  void TinyMouse_::move (int8_t x, int8_t y, int8_t wheel, int8_t scroll) {
     if ( USBDevice.suspended() )  {
       USBDevice.remoteWakeup();
     }
     while(!usb_hid.ready()) delay(1);
-    usb_hid.mouseReport(RID_MOUSE,_buttons,x,y,wheel,0);
+    usb_hid.mouseReport(RID_MOUSE,_buttons,x,y,wheel,scroll);
   }
   
   void TinyMouse_::end(void) 
