@@ -14,7 +14,7 @@
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
  *
- *  NOTE2: This code is base on TinyUSB Mouse and Keyboard. 
+ *  NOTE1: This code is base on TinyUSB Mouse and Keyboard. 
  *    For detail of this lib see
  *    https://github.com/cyborg5/TinyUSB_Mouse_and_Keyboard
  *
