@@ -176,7 +176,6 @@
         }
       }
       if (i == 6) {
-        setWriteError();
         return 0;
       } 
     }
