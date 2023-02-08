@@ -14,7 +14,7 @@
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
  *
- *  NOTE1: This code is base on TinyUSB Mouse and Keyboard. 
+ *  NOTE2: This code is base on TinyUSB Mouse and Keyboard. 
  *    For detail of this lib see
  *    https://github.com/cyborg5/TinyUSB_Mouse_and_Keyboard
  *
@@ -48,7 +48,8 @@
   #define MOUSE_LEFT 1
   #define MOUSE_RIGHT 2
   #define MOUSE_MIDDLE 4
-  #define MOUSE_ALL (MOUSE_LEFT | MOUSE_RIGHT | MOUSE_MIDDLE)
+  #define MOUSE_BACKWARD 8
+  #define MOUSE_FORWARD 16
 
   /*
    * This class contains the exact same methods as the Arduino Mouse.h class.
@@ -99,6 +100,9 @@
     size_t press(uint8_t k);
     size_t release(uint8_t k);
     void releaseAll(void);
+    void write(char ch);
+    void writeSequence(const char* str, uint16_t delayTime);
+    void writeSequence(String str, uint16_t delayTime);
   };
   
   extern TinyKeyboard_ Keyboard;
@@ -121,4 +125,47 @@
   };
   
   extern TinyConsumer_ Consumer;
+
+/*****************************
+ *   GAMEPAD SECTION
+ *****************************/ 
+
+#define GAMEPAD_A       1
+#define GAMEPAD_SOUTH   1
+
+#define GAMEPAD_B       2
+#define GAMEPAD_EAST    2
+
+#define GAMEPAD_C       4
+
+#define GAMEPAD_X       8
+#define GAMEPAD_NORTH   8
+
+#define GAMEPAD_Y       16
+#define GAMEPAD_WEST    16
+
+#define GAMEPAD_Z       32
+#define GAMEPAD_TL      64
+#define GAMEPAD_TR      128
+#define GAMEPAD_TL2     256
+#define GAMEPAD_TR2     512
+#define GAMEPAD_SELECT  1024
+#define GAMEPAD_START   2048
+#define GAMEPAD_MODE    4096
+#define GAMEPAD_THUMBL  8192
+#define GAMEPAD_THUMBR  16384
+
+
+  class TinyGamepad_ 
+  {
+  private:
+    hid_gamepad_report_t    gp;
+   void sendPadControl(hid_gamepad_report_t*   gp);
+  public:
+    TinyGamepad_(void);
+    void begin(void);
+    void end(void);
+  };
+  
+  extern TinyGamepad_ Gamepad;
 
