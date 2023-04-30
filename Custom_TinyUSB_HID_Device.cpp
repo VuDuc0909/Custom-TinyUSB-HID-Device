@@ -14,11 +14,14 @@
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
  *
- *  NOTE2: This code is base on TinyUSB Mouse and Keyboard. 
+ *  NOTE1: This code is base on TinyUSB Mouse and Keyboard. 
  *    For detail of this lib see
  *    https://github.com/cyborg5/TinyUSB_Mouse_and_Keyboard
  *
- *  NOTE2: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
+ *  NOTE2: For keycode use in this lib see in this link (tinyusb lib):
+ *  https://github.com/hathach/tinyusb/blob/master/src/class/hid/hid.h
+ *
+ *  NOTE3: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
  *    Keyboard.h, and Keyboard.cpp code. The copyright on that original code
  *    is as follows.
  *   
@@ -329,6 +332,83 @@ TinyConsumer_ Consumer;//create an instance of the Consumer object
   
   void TinyGamepad_::end(void)
   {
+  }
+
+   void TinyGamepad_::sendPadControl(hid_gamepad_report_t*  _gamepadReport) {
+    if ( USBDevice.suspended() )  {
+      USBDevice.remoteWakeup();
+    }
+    while(!usb_hid.ready()) delay(1);
+      usb_hid.sendReport(RID_GAMEPAD, &_gamepadReport, sizeof(_gamepadReport));
+    delay(2);
+  }
+
+  void TinyGamepad_::press(uint16_t buttons){
+    // Check if currently pressed buttons already include desired buttons to be pressed
+    if ((_gamepadReport.buttons | buttons) != _gamepadReport.buttons) {
+        _gamepadReport.buttons |= buttons;
+        sendPadControl(&_gamepadReport);
+    }
+  }
+
+  void TinyGamepad_::release(uint16_t buttons){
+     // Check if desired buttons to be released are currently pressed
+    if ((_gamepadReport.buttons & ~buttons) != _gamepadReport.buttons) {
+        _gamepadReport.buttons &= ~buttons;
+        sendPadControl(&_gamepadReport);
+    }
+  }
+
+  void TinyGamepad_::releaseAll(void){
+    _gamepadReport.buttons = 0;
+    sendPadControl(&_gamepadReport);
+  }
+
+  void TinyGamepad_::setHat(uint8_t hat){
+    if (hat <= GAMEPAD_HAT_UP_LEFT) {
+      _gamepadReport.hat = hat;
+      sendPadControl(&_gamepadReport);
+    }
+  }
+
+  void TinyGamepad_::setAxes(int16_t x, int16_t y, int16_t z, int16_t Rz, int16_t Rx, int16_t Ry){
+    if(x == -32768) { x = -32767; }
+    if(y == -32768) { y = -32767; }
+    if(z == -32768) { z = -32767; }
+    if(Rz == -32768) { Rz = -32767; }
+    if(Rx == -32768) { Rx = -32767; }
+    if(Ry == -32768) { Ry = -32767; }
+    _gamepadReport.x = x;
+    _gamepadReport.y = y;
+    _gamepadReport.z = z;
+    _gamepadReport.rz = Rz;
+    _gamepadReport.rx = Rx;
+    _gamepadReport.ry = Ry;
+    sendPadControl(&_gamepadReport);
+  }
+
+  void TinyGamepad_::setLeftStick(int16_t x, int16_t y){
+    if(x == -32768) { x = -32767; }
+    if(y == -32768) { y = -32767; }
+    _gamepadReport.x = x;
+    _gamepadReport.y = y;
+    sendPadControl(&_gamepadReport);
+  }
+
+  void TinyGamepad_::setRightStick(int16_t z, int16_t Rz){
+    if(z == -32768) { z = -32767; }
+    if(Rz == -32768) { Rz = -32767; }
+    _gamepadReport.z = z;
+    _gamepadReport.rz = Rz;
+    sendPadControl(&_gamepadReport);
+  }
+
+  void TinyGamepad_::setTriggers(int16_t Rx, int16_t Ry){
+    if(Rx == -32768) { Rx = -32767; }
+    if(Ry == -32768) { Ry = -32767; }
+    _gamepadReport.rx = Rx;
+    _gamepadReport.ry = Ry;
+    sendPadControl(&_gamepadReport);
   }
 
 TinyGamepad_ Gamepad;//create an instance of the Gamepad object

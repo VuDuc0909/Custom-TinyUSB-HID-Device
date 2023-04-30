@@ -14,11 +14,14 @@
  *  For details on Arduino Keyboard.h see
  *   https://www.arduino.cc/reference/en/language/functions/usb/keyboard/
  *
- *  NOTE2: This code is base on TinyUSB Mouse and Keyboard. 
+ *  NOTE1: This code is base on TinyUSB Mouse and Keyboard. 
  *    For detail of this lib see
  *    https://github.com/cyborg5/TinyUSB_Mouse_and_Keyboard
  *
- *  NOTE2: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
+ *  NOTE2: For keycode use in this lib see in this link (tinyusb lib):
+ *  https://github.com/hathach/tinyusb/blob/master/src/class/hid/hid.h
+ *
+ *  NOTE3: This code is derived from the standard Arduino Mouse.h, Mouse.cpp,
  *    Keyboard.h, and Keyboard.cpp code. The copyright on that original code
  *    is as follows.
  *   
@@ -64,7 +67,7 @@
       void begin(void);
       void end(void);
       void click(uint8_t b = MOUSE_LEFT);
-      void move(signed char x, signed char y, signed char wheel = 0, signed char scroll = 0); 
+      void move(signed char x, signed char y, signed char wheel = 0, signed char scroll = 0); //scroll meaning horizontal scroll
       void press(uint8_t b = MOUSE_LEFT);   // press LEFT by default
       void release(uint8_t b = MOUSE_LEFT); // release LEFT by default
       bool isPressed(uint8_t b = MOUSE_LEFT); // check LEFT by default
@@ -130,41 +133,25 @@
  *   GAMEPAD SECTION
  *****************************/ 
 
-#define GAMEPAD_A       1
-#define GAMEPAD_SOUTH   1
-
-#define GAMEPAD_B       2
-#define GAMEPAD_EAST    2
-
-#define GAMEPAD_C       4
-
-#define GAMEPAD_X       8
-#define GAMEPAD_NORTH   8
-
-#define GAMEPAD_Y       16
-#define GAMEPAD_WEST    16
-
-#define GAMEPAD_Z       32
-#define GAMEPAD_TL      64
-#define GAMEPAD_TR      128
-#define GAMEPAD_TL2     256
-#define GAMEPAD_TR2     512
-#define GAMEPAD_SELECT  1024
-#define GAMEPAD_START   2048
-#define GAMEPAD_MODE    4096
-#define GAMEPAD_THUMBL  8192
-#define GAMEPAD_THUMBR  16384
-
-
   class TinyGamepad_ 
   {
   private:
-    hid_gamepad_report_t    gp;
-   void sendPadControl(hid_gamepad_report_t*   gp);
+    hid_gamepad_report_t    _gamepadReport;
+   void sendPadControl(hid_gamepad_report_t*   _gamepadReport);
   public:
     TinyGamepad_(void);
     void begin(void);
     void end(void);
+    void press(uint16_t buttons);
+    void release(uint16_t buttons);
+    void releaseAll(void);
+
+    void setHat(uint8_t hat);
+
+    void setAxes(int16_t x = 0, int16_t y = 0, int16_t z = 0, int16_t Rz = 0, int16_t Rx = 0, int16_t Ry = 0);
+    void setLeftStick(int16_t x = 0, int16_t y = 0);
+    void setRightStick(int16_t z = 0, int16_t Rz = 0);
+    void setTriggers(int16_t Rx = 0, int16_t Ry = 0);
   };
   
   extern TinyGamepad_ Gamepad;
